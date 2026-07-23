@@ -1,10 +1,10 @@
 // ---------------------------------------------------------------------------
-// Paleta — muestreada del diseño de Illustrator
+// Paleta — extraída de los SVG exportados del .ai
 // ---------------------------------------------------------------------------
-$color-blue:        #3d5afe; // azul principal (titulares, fondo RSVP)
-$color-blue-soft:   #a9b6f5; // azul claro de los swirls del hero
-$color-orange:      #f97316; // naranja de bloque "Nuestra historia"
-$color-cream:       #f7f5ef; // fondo crema del hero / secciones claras
+$color-blue:        #4d66f6; // azul principal (titulares, fondo RSVP)
+$color-blue-soft:   rgba($color-blue, 0.35); // adorno lateral del hero
+$color-orange:      #ff7f0b; // naranja de "Nuestra historia"
+$color-cream:       #f9f7f4; // fondo crema (confirmado en ermita.svg)
 $color-white:       #ffffff;
 
 // Alias semánticos

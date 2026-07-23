@@ -1,0 +1,117 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; // recorta los adornos contra el borde del viewport
+  background-color: v.$color-cream;
+  // El padding inferior aloja la fecha, que se sale del lienzo (top: 102%)
+  padding-block: 40px 72px;
+  padding-inline: v.$gutter-mobile;
+
+  @include m.up(tablet) {
+    padding-block: 56px 96px;
+    padding-inline: 64px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Adornos laterales
+   --------------------------------------------------------------------------- */
+.adorno {
+  position: absolute;
+  top: 50%;
+  width: auto;
+  height: 88%;
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+
+  @include m.down(desktop) {
+    display: none;
+  }
+}
+
+.adornoLeft {
+  left: 0;
+  transform: translate(-58%, -50%);
+}
+
+.adornoRight {
+  right: 0;
+  transform: translate(58%, -50%) scaleX(-1);
+}
+
+/* ---------------------------------------------------------------------------
+   Lienzo de composición
+   Replica la proporción del SVG (883.48 × 798.56). Al ser un contenedor de
+   consulta, los hijos usan `cqw` y escalan solidariamente con el logotipo:
+   la composición se comporta como una sola pieza a cualquier tamaño.
+   --------------------------------------------------------------------------- */
+.stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 620px;
+  aspect-ratio: 883.48 / 798.56;
+  container-type: inline-size;
+}
+
+.title {
+  margin: 0;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Textos superpuestos
+   Ajustar SOLO estas cuatro propiedades por bloque: top, left/right y
+   font-size. Todo en % o cqw — nunca en px — para no romper el escalado.
+   --------------------------------------------------------------------------- */
+.eyebrow,
+.date {
+  position: absolute;
+  margin: 0;
+  font-family: v.$font-sans;
+  font-weight: 300; // Poppins Light
+  line-height: 1;
+  white-space: nowrap;
+  color: v.$color-blue;
+  text-transform: uppercase;
+}
+
+/* Claim: arranca a la derecha del perro sentado */
+.eyebrow {
+  top: 11.5%;
+  left: 17%;
+  font-size: 3cqw;
+  letter-spacing: 0.3em;
+}
+
+/* Fecha: alineada a la derecha, bajo el perro de pie.
+   Queda por debajo del lienzo (top > 100%); el padding inferior del
+   .hero reserva el espacio para que no invada la sección siguiente. */
+.date {
+  top: 102%;
+  right: -0.5%;
+  font-size: 2.9cqw;
+  letter-spacing: 0.28em;
+}
+
+/* En pantallas pequeñas el texto se queda por debajo del mínimo legible;
+   se fija un suelo en px y se recoloca ligeramente. */
+@include m.down(tablet) {
+  .eyebrow {
+    font-size: max(3cqw, 11px);
+  }
+
+  .date {
+    font-size: max(2.9cqw, 12px);
+  }
+}
