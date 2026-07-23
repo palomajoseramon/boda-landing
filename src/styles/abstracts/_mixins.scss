@@ -1,0 +1,89 @@
+@use 'sass:math';
+@use 'variables' as v;
+
+// ---------------------------------------------------------------------------
+// Breakpoints — mobile-first por defecto (`up`), `down` para excepciones
+// ---------------------------------------------------------------------------
+@mixin up($bp) {
+  @if $bp == mobile      { @media (min-width: v.$bp-mobile)  { @content; } }
+  @else if $bp == tablet { @media (min-width: v.$bp-tablet)  { @content; } }
+  @else if $bp == desktop{ @media (min-width: v.$bp-desktop) { @content; } }
+  @else if $bp == wide   { @media (min-width: v.$bp-wide)    { @content; } }
+  @else { @error "Breakpoint desconocido: #{$bp}"; }
+}
+
+@mixin down($bp) {
+  @if $bp == mobile      { @media (max-width: v.$bp-mobile - 1px)  { @content; } }
+  @else if $bp == tablet { @media (max-width: v.$bp-tablet - 1px)  { @content; } }
+  @else if $bp == desktop{ @media (max-width: v.$bp-desktop - 1px) { @content; } }
+  @else if $bp == wide   { @media (max-width: v.$bp-wide - 1px)    { @content; } }
+  @else { @error "Breakpoint desconocido: #{$bp}"; }
+}
+
+// ---------------------------------------------------------------------------
+// Contenedor centrado con los gutters del diseño
+// ---------------------------------------------------------------------------
+@mixin container {
+  width: 100%;
+  max-width: v.$container-max;
+  margin-inline: auto;
+  padding-inline: v.$gutter-mobile;
+
+  @include up(tablet) {
+    padding-inline: v.$gutter-desktop;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Escalado fluido entre dos anchos de viewport — clave para el pixel-perfect.
+// Interpola linealmente $min→$max y bloquea fuera del rango con clamp().
+// Uso: @include fluid(font-size, 32px, 72px);
+// ---------------------------------------------------------------------------
+@function strip($value) {
+  @return math.div($value, ($value * 0 + 1));
+}
+
+@mixin fluid($prop, $min, $max, $from: v.$bp-mobile, $to: v.$container-max) {
+  $slope: math.div(strip($max) - strip($min), strip($to) - strip($from));
+  $intercept: strip($min) - $slope * strip($from);
+
+  #{$prop}: clamp(
+    #{$min},
+    #{$intercept * 1px} + #{$slope * 100vw},
+    #{$max}
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Accesibilidad
+// ---------------------------------------------------------------------------
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Reseteo de botón para elementos interactivos sin estilo nativo
+@mixin button-reset {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+// Foco visible coherente en toda la web
+@mixin focus-ring($color: v.$color-blue) {
+  &:focus-visible {
+    outline: 2px solid $color;
+    outline-offset: 3px;
+  }
+}
