@@ -1,0 +1,98 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.seccion {
+  @include m.p3(background-color, v.$color-orange, v.$color-orange-p3);
+  @include m.p3(color, v.$color-cream, v.$color-cream-p3);
+
+  padding-block: 64px 72px;
+  overflow: hidden;
+
+  @include m.up(desktop) {
+    padding-block: 88px 96px;
+  }
+}
+
+.inner {
+  @include m.container;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  margin: 0 0 12px;
+
+  @include m.fluid(font-size, v.$fs-h2-min, v.$fs-h2-max);
+}
+
+/* ---------------------------------------------------------------------------
+   Marcador
+   --------------------------------------------------------------------------- */
+.marcador {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.grupo {
+  display: flex;
+  align-items: flex-start;
+}
+
+.bloque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.numero {
+  font-family: v.$font-serif;
+  line-height: 1;
+  /* Cifras de ancho fijo: sin esto el marcador se desplazaría a cada
+     cambio de segundo. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+
+  @include m.fluid(font-size, 62px, 128px);
+}
+
+/* Los dos puntos se alinean con la caja de las cifras, no con el bloque
+   completo, para que no arrastren la etiqueta inferior. */
+.separador {
+  font-family: v.$font-serif;
+  line-height: 1;
+  padding-inline: 0.18em;
+
+  @include m.fluid(font-size, 46px, 96px);
+  @include m.fluid(margin-top, 8px, 16px);
+}
+
+.etiqueta {
+  font-weight: 400; // Poppins Regular
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+
+  @include m.fluid(font-size, v.$fs-caption-min, v.$fs-caption-max);
+}
+
+/* ---------------------------------------------------------------------------
+   Perro
+   --------------------------------------------------------------------------- */
+.perro {
+  width: auto;
+  height: auto;
+  margin-top: 48px;
+
+  @include m.fluid(max-height, 140px, 220px);
+
+  @include m.up(desktop) {
+    margin-top: 72px;
+  }
+}

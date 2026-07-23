@@ -1,0 +1,193 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.seccion {
+  @include m.p3(background-color, v.$color-blue, v.$color-blue-p3);
+  @include m.p3(color, v.$color-cream, v.$color-cream-p3);
+
+  padding-block: 56px 72px;
+
+  @include m.up(desktop) {
+    padding-block: 80px 96px;
+  }
+}
+
+.inner {
+  @include m.container;
+
+  @include m.up(desktop) {
+    max-width: v.$container-max;
+    padding-inline: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Número de cuenta
+   --------------------------------------------------------------------------- */
+.cuenta {
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 56px;
+
+  @include m.up(desktop) {
+    margin-bottom: 80px;
+  }
+}
+
+.desplegable {
+  @include m.button-reset;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 26px;
+  border: 1px solid rgba(v.$color-cream, 0.9);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background-color v.$dur-fast v.$ease-out-soft;
+
+  @include m.fluid(font-size, 14px, 17px);
+
+  &:hover {
+    background-color: rgba(v.$color-cream, 0.12);
+  }
+
+  &:focus-visible {
+    outline: 2px solid v.$color-cream;
+    outline-offset: 3px;
+  }
+}
+
+.chevron {
+  display: inline-block;
+  line-height: 0.6;
+  transition: transform v.$dur-base v.$ease-out-soft;
+}
+
+.chevronAbierto {
+  transform: rotate(180deg);
+}
+
+/* Panel desplegado: fondo claro con el IBAN en azul.
+   El aviso de copiado se superpone en lugar de ocupar su propia línea,
+   para que el panel conserve la altura del diseño. */
+.panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background-color: v.$color-cream;
+
+  @media (color-gamut: p3) {
+    background-color: v.$color-cream-p3;
+  }
+}
+
+.iban {
+  @include m.button-reset;
+
+  letter-spacing: 0.06em;
+  text-align: center;
+  word-break: break-word;
+  transition: opacity v.$dur-fast v.$ease-out-soft;
+
+  @include m.p3(color, v.$color-blue, v.$color-blue-p3);
+  @include m.fluid(font-size, 16px, 21px);
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:focus-visible {
+    outline: 2px solid v.$color-blue;
+    outline-offset: 3px;
+  }
+}
+
+/* Aparece flotando sobre el panel, sin alterar su altura */
+.copiado {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+
+  @include m.p3(color, v.$color-orange, v.$color-orange-p3);
+  @include m.fluid(font-size, 11px, 13px);
+
+  // En pantallas estrechas no hay hueco junto al IBAN: se centra encima
+  // con un fondo que garantiza la legibilidad.
+  @include m.down(tablet) {
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 3px 10px;
+    background-color: v.$color-cream;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Contacto
+   --------------------------------------------------------------------------- */
+.title {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 0 24px;
+
+  @include m.fluid(font-size, v.$fs-h2-min, v.$fs-h2-max);
+
+  @include m.up(desktop) {
+    margin-bottom: 32px;
+  }
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid rgba(v.$color-cream, 0.55);
+}
+
+.fila {
+  border-bottom: 1px solid transparent;
+}
+
+.enlace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: opacity v.$dur-fast v.$ease-out-soft;
+
+  @include m.fluid(font-size, 16px, 22px);
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:focus-visible {
+    outline: 2px solid v.$color-cream;
+    outline-offset: 3px;
+  }
+}
+
+.nombre {
+  font-weight: 400;
+}
+
+.telefono {
+  font-weight: 400;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

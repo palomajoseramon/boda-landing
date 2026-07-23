@@ -9,6 +9,11 @@
       .cls-2 {
         fill: #ff7f0b;
       }
+    
+      @media (color-gamut: p3) {
+        .cls-1 { fill: color(display-p3 0.302 0.400 0.965); }
+        .cls-2 { fill: color(display-p3 1 0.498 0.043); }
+      }
     </style>
   </defs>
   <g id="FOOTER">

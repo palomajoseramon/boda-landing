@@ -26,6 +26,20 @@
       .cls-5 {
         fill: none;
       }
+    
+      @media (color-gamut: p3) {
+        .cls-1, .cls-2, .cls-3, .cls-4 {
+          fill: color(display-p3 0.302 0.400 0.965);
+        }
+
+        .cls-1, .cls-2, .cls-4, .cls-5 {
+          stroke: color(display-p3 0.976 0.969 0.957);
+        }
+
+        .cls-5 {
+          fill: none;
+        }
+      }
     </style>
   </defs>
   <g id="section_2" data-name="section 2">

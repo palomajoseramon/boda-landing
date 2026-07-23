@@ -55,6 +55,20 @@
 }
 
 // ---------------------------------------------------------------------------
+// Color de gama amplia
+// Declara la propiedad con el hex y, si la pantalla admite Display P3, la
+// repite en esa gama. El navegador se queda con la última que entiende.
+// Uso: @include p3(background-color, v.$color-orange, v.$color-orange-p3);
+// ---------------------------------------------------------------------------
+@mixin p3($prop, $fallback, $wide) {
+  #{$prop}: $fallback;
+
+  @media (color-gamut: p3) {
+    #{$prop}: $wide;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Accesibilidad
 // ---------------------------------------------------------------------------
 @mixin visually-hidden {

@@ -1,0 +1,144 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.historia {
+  @include m.p3(background-color, v.$color-orange, v.$color-orange-p3);
+  @include m.p3(color, v.$color-cream, v.$color-cream-p3);
+
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Lienzo
+   En desktop replica la proporción del artboard y cada bloque se coloca en
+   porcentajes: se mueven de forma independiente. Es contenedor de consulta,
+   así que los tamaños en `cqw` escalan de forma solidaria.
+   En mobile el lienzo se desmonta y todo pasa a flujo vertical normal.
+   --------------------------------------------------------------------------- */
+.stage {
+  @include m.container;
+
+  position: relative;
+
+  @include m.up(desktop) {
+    container-type: inline-size;
+    // Más alto que el bloque de contenido: la holgura sobrante es el aire
+    // inferior de la sección.
+    aspect-ratio: 1146 / 900;
+    max-width: v.$container-max;
+    padding-inline: 0;
+  }
+}
+
+/* Elementos posicionables — solo en desktop */
+.perro,
+.title,
+.texto,
+.marco {
+  @include m.up(desktop) {
+    position: absolute;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Perro — arriba a la izquierda, a la altura del borde superior de la foto
+   --------------------------------------------------------------------------- */
+.perro {
+  width: auto;
+  height: 120px;
+  margin-bottom: 18px;
+
+  @include m.up(desktop) {
+    top: 11%;
+    left: 1%;
+    height: auto;
+    width: 13cqw;
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Titular
+   --------------------------------------------------------------------------- */
+.title {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1;
+  color: v.$color-cream;
+  margin: 0 0 18px;
+
+  @include m.fluid(font-size, v.$fs-h2-min, v.$fs-h2-max);
+
+  // En móvil el titular se reparte en dos líneas, como en el diseño
+  @include m.down(desktop) {
+    max-width: 6ch;
+    line-height: 1.05;
+  }
+
+  @include m.up(desktop) {
+    top: 33%;
+    left: 0;
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Cuerpo de texto — Poppins Light en cursiva
+   --------------------------------------------------------------------------- */
+.texto {
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.55;
+  color: v.$color-cream;
+
+  @include m.fluid(font-size, v.$fs-body-min, v.$fs-body-max);
+
+  @include m.up(desktop) {
+    top: 43%;
+    left: 0;
+    width: 49cqw;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+}
+
+.lead {
+  font-weight: 700;
+  margin-bottom: 1em !important;
+}
+
+/* Separación entre bloques narrativos */
+.espaciado {
+  margin-top: 1.7em !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Foto — el marco viene incluido en el propio archivo exportado
+   --------------------------------------------------------------------------- */
+.marco {
+  margin-top: 32px;
+
+  @include m.up(desktop) {
+    top: 8%;
+    right: 0;
+    width: 35cqw;
+    margin: 0;
+  }
+}
+
+.foto {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile — flujo vertical
+   --------------------------------------------------------------------------- */
+@include m.down(desktop) {
+  .historia {
+    padding-block: 48px 64px;
+  }
+}

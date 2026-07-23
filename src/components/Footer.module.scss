@@ -1,0 +1,142 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.footer {
+  @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
+  @include m.p3(color, v.$color-blue, v.$color-blue-p3);
+
+  padding-block: 64px 72px;
+  text-align: center;
+
+  @include m.up(desktop) {
+    padding-block: 96px 104px;
+  }
+}
+
+.inner {
+  @include m.container;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Claim superior
+   --------------------------------------------------------------------------- */
+.claim {
+  font-weight: 400; // Poppins Regular
+  letter-spacing: 0.24em;
+  text-indent: 0.24em; // compensa el tracking del último carácter
+  text-transform: uppercase;
+  margin: 0 0 20px;
+
+  @include m.fluid(font-size, 13px, 17px);
+
+  @include m.up(desktop) {
+    margin-bottom: 26px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Caras de los perros
+   Los dos SVG tienen viewBox ligeramente distinto (214 y 204), así que se
+   igualan por altura para que queden ópticamente a la misma escala.
+   --------------------------------------------------------------------------- */
+.perros {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 56px;
+
+  @include m.up(desktop) {
+    gap: 8px;
+    margin-bottom: 80px;
+  }
+}
+
+.perro {
+  width: auto;
+
+  @include m.fluid(height, 86px, 118px);
+}
+
+/* ---------------------------------------------------------------------------
+   Logotipo
+   --------------------------------------------------------------------------- */
+.logoCaja {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 0 28px;
+
+  @include m.up(desktop) {
+    margin-bottom: 36px;
+  }
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Frase
+   --------------------------------------------------------------------------- */
+.frase {
+  font-weight: 300; // Poppins Light
+  font-style: italic;
+  line-height: 1.45;
+  margin: 0 0 64px;
+
+  @include m.fluid(font-size, 15px, 18px);
+
+  @include m.up(desktop) {
+    margin-bottom: 88px;
+  }
+
+  // Los saltos del diseño se anulan en pantallas estrechas
+  @include m.down(tablet) {
+    br {
+      display: none;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Cierre
+   --------------------------------------------------------------------------- */
+.cierre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.gracias {
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  text-transform: uppercase;
+  margin: 0;
+
+  @include m.fluid(font-size, 13px, 18px);
+}
+
+.fecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  margin: 0;
+
+  @include m.fluid(font-size, 14px, 19px);
+}
+
+.corazon {
+  // El corazón no lleva tracking: se compensa el sangrado heredado
+  text-indent: 0;
+  font-weight: 400;
+}

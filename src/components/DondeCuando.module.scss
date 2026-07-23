@@ -1,0 +1,187 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.seccion {
+  @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
+
+  overflow: hidden;
+  // En móvil las secciones se suceden en vertical y necesitan separación
+  // explícita; en desktop la aporta el lienzo de "Detalles".
+  padding-block: 72px 24px;
+
+  @include m.up(desktop) {
+    padding-block: 128px 0;
+  }
+}
+
+.stage {
+  @include m.container;
+
+  position: relative;
+
+  @include m.up(desktop) {
+    container-type: inline-size;
+    aspect-ratio: 1146 / 700;
+    max-width: v.$container-max;
+    padding-inline: 0;
+  }
+}
+
+/* Elementos posicionables — solo en desktop */
+.encabezado,
+.ermita,
+.info {
+  @include m.up(desktop) {
+    position: absolute;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Encabezado
+   --------------------------------------------------------------------------- */
+.encabezado {
+  margin-bottom: 28px;
+
+  @include m.up(desktop) {
+    top: 0;
+    left: 0;
+    margin: 0;
+  }
+}
+
+.title {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 0 6px;
+
+  @include m.p3(color, v.$color-orange, v.$color-orange-p3);
+  @include m.fluid(font-size, v.$fs-h2-min, v.$fs-h2-max);
+
+  // En móvil el titular se reparte en dos líneas, como en el diseño
+  @include m.down(desktop) {
+    max-width: 8ch;
+    line-height: 1.05;
+  }
+}
+
+.fecha {
+  font-weight: 400; // Poppins Regular
+  margin: 0;
+
+  @include m.p3(color, v.$color-blue, v.$color-blue-p3);
+  @include m.fluid(font-size, v.$fs-body-min, v.$fs-body-max);
+}
+
+/* ---------------------------------------------------------------------------
+   Ilustración de la ermita
+   --------------------------------------------------------------------------- */
+.ermita {
+  width: 100%;
+  height: auto;
+  margin-bottom: 32px;
+
+  @include m.up(desktop) {
+    top: 24%;
+    left: 0;
+    width: 58cqw;
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Columna de horarios
+   --------------------------------------------------------------------------- */
+.info {
+  @include m.up(desktop) {
+    top: 26%;
+    right: 0;
+    width: 39cqw;
+  }
+}
+
+.bloque {
+  margin-bottom: 30px;
+
+  @include m.up(desktop) {
+    margin-bottom: 3.4cqw;
+  }
+}
+
+/* Titular de hora: serif, con filete inferior */
+.hora {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  margin: 0 0 12px;
+
+  @include m.p3(color, v.$color-orange, v.$color-orange-p3);
+  @include m.fluid(font-size, v.$fs-h3-min, v.$fs-h3-max);
+
+  border-bottom: 1px solid v.$color-orange;
+
+  @media (color-gamut: p3) {
+    border-bottom-color: v.$color-orange-p3;
+  }
+}
+
+.lugar {
+  margin: 0;
+
+  @include m.fluid(font-size, v.$fs-body-lg-min, v.$fs-body-lg-max);
+}
+
+.enlace {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  font-weight: 400;
+  transition: opacity v.$dur-fast v.$ease-out-soft;
+
+  @include m.p3(color, v.$color-orange, v.$color-orange-p3);
+  @include m.focus-ring(v.$color-orange);
+
+  &:hover {
+    opacity: 0.72;
+
+    .flecha {
+      transform: translate(2px, -2px);
+    }
+  }
+}
+
+/* La flecha usa Space Grotesk, como en el diseño */
+.flecha {
+  font-family: v.$font-mono;
+  font-size: 1.1em;
+  line-height: 1;
+  transition: transform v.$dur-fast v.$ease-out-soft;
+}
+
+/* ---------------------------------------------------------------------------
+   Bloque de buses
+   --------------------------------------------------------------------------- */
+.buses {
+  line-height: 1.45;
+
+  @include m.p3(color, v.$color-blue, v.$color-blue-p3);
+  @include m.fluid(font-size, v.$fs-body-min, v.$fs-body-max);
+
+  @include m.up(desktop) {
+    margin-top: 6cqw;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.busesTitulo {
+  text-transform: uppercase;
+}
+
+.busesDestacado {
+  font-weight: 700;
+}

@@ -7,6 +7,13 @@ $color-orange:      #ff7f0b; // naranja de "Nuestra historia"
 $color-cream:       #f9f7f4; // fondo crema (confirmado en ermita.svg)
 $color-white:       #ffffff;
 
+// Equivalentes en Display P3 para pantallas de gama amplia.
+// Se aplican con el mixin `p3` (ver _mixins.scss), que deja el hex como
+// fallback para el resto de dispositivos.
+$color-blue-p3:     color(display-p3 0.302 0.400 0.965);
+$color-orange-p3:   color(display-p3 1 0.498 0.043);
+$color-cream-p3:    color(display-p3 0.976 0.969 0.957);
+
 // Alias semánticos
 $bg-light:          $color-cream;
 $bg-orange:         $color-orange;
@@ -19,6 +26,23 @@ $bg-blue:           $color-blue;
 $font-serif:  var(--font-instrument-serif), Georgia, serif;  // "Nuestra historia"
 $font-sans:   var(--font-poppins), system-ui, sans-serif;    // cuerpo de texto
 $font-mono:   var(--font-space-grotesk), monospace;          // fechas, contador
+
+// ---------------------------------------------------------------------------
+// Escala tipográfica
+// Un único origen para los tamaños. Cada nivel define su mínimo (móvil) y su
+// máximo (ancho de diseño) y se aplica con el mixin `fluid`, de modo que
+// todas las secciones comparten la misma progresión.
+// ---------------------------------------------------------------------------
+$fs-h2-min:        68px;  // titulares de sección
+$fs-h2-max:        76px;
+$fs-h3-min:        24px;  // horas de "Dónde y cuándo"
+$fs-h3-max:        32px;
+$fs-body-min:      17px;  // cuerpo de texto general
+$fs-body-max:      19px;
+$fs-body-lg-min:   17px;  // enlaces de localización
+$fs-body-lg-max:   21px;
+$fs-caption-min:   13px;  // pies de icono, claim del hero
+$fs-caption-max:   17px;
 
 // ---------------------------------------------------------------------------
 // Layout

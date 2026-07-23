@@ -6,8 +6,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  // Ocupa siempre la altura de la ventana: `dvh` se adapta a la barra del
+  // navegador en móvil, donde `vh` dejaría un recorte al hacer scroll.
+  min-height: 100dvh;
   overflow: hidden; // recorta los adornos contra el borde del viewport
-  background-color: v.$color-cream;
+
+  @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
+
   // El padding inferior aloja la fecha, que se sale del lienzo (top: 102%)
   padding-block: 40px 72px;
   padding-inline: v.$gutter-mobile;
@@ -19,30 +24,56 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Adornos laterales
+   Adornos
+   En desktop enmarcan la composición por los costados; en móvil, donde no
+   hay aire lateral, pasan a las esquinas superior e inferior.
    --------------------------------------------------------------------------- */
 .adorno {
   position: absolute;
-  top: 50%;
   width: auto;
-  height: 88%;
   opacity: 0.4;
   pointer-events: none;
   user-select: none;
+}
 
-  @include m.down(desktop) {
-    display: none;
+.adornoLeft,
+.adornoRight {
+  @include m.up(desktop) {
+    top: 50%;
+    height: 88%;
   }
 }
 
 .adornoLeft {
-  left: 0;
-  transform: translate(-58%, -50%);
+  // Móvil: entra por la esquina superior derecha
+  top: 0;
+  right: 0;
+  height: 34%;
+  transform: translate(30%, -46%);
+
+  @include m.up(desktop) {
+    left: 0;
+    right: auto;
+    height: 88%;
+    transform: translate(-58%, -50%);
+  }
 }
 
 .adornoRight {
-  right: 0;
-  transform: translate(58%, -50%) scaleX(-1);
+  // Móvil: asoma por la esquina inferior izquierda
+  bottom: 0;
+  left: 0;
+  height: 30%;
+  transform: translate(-38%, 42%) scaleX(-1);
+
+  @include m.up(desktop) {
+    top: 50%;
+    bottom: auto;
+    left: auto;
+    right: 0;
+    height: 88%;
+    transform: translate(58%, -50%) scaleX(-1);
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -55,7 +86,10 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 620px;
+  // Se limita por ancho y, en pantallas bajas, también por alto: el factor
+  // 0.78 mantiene la proporción del SVG y reserva sitio para la fecha,
+  // que cuelga por debajo del lienzo.
+  max-width: min(620px, 78vh);
   aspect-ratio: 883.48 / 798.56;
   container-type: inline-size;
 }
@@ -82,8 +116,9 @@
   font-weight: 300; // Poppins Light
   line-height: 1;
   white-space: nowrap;
-  color: v.$color-blue;
   text-transform: uppercase;
+
+  @include m.p3(color, v.$color-blue, v.$color-blue-p3);
 }
 
 /* Claim: arranca a la derecha del perro sentado */

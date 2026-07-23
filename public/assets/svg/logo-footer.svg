@@ -5,6 +5,10 @@
       .cls-1 {
         fill: #4d66f6;
       }
+    
+      @media (color-gamut: p3) {
+        .cls-1 { fill: color(display-p3 0.302 0.400 0.965); }
+      }
     </style>
   </defs>
   <g id="FOOTER">

@@ -1,0 +1,107 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.seccion {
+  @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
+
+  // En móvil necesita respiro propio; en desktop la sección anterior ya
+  // aporta separación suficiente.
+  padding-block: 88px 80px;
+
+  @include m.up(desktop) {
+    padding-block: 24px 144px;
+  }
+}
+
+/* Misma caja que el resto de secciones: en desktop el contenido se alinea
+   con el borde del contenedor, sin padding lateral. */
+.inner {
+  @include m.container;
+
+  @include m.up(desktop) {
+    max-width: v.$container-max;
+    padding-inline: 0;
+  }
+}
+
+.title {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 0 48px;
+
+  @include m.p3(color, v.$color-orange, v.$color-orange-p3);
+  @include m.fluid(font-size, v.$fs-h2-min, v.$fs-h2-max);
+
+  // En móvil el titular se reparte en varias líneas, como en el diseño
+  @include m.down(desktop) {
+    max-width: 9ch;
+    line-height: 1.05;
+  }
+
+  @include m.up(desktop) {
+    margin-bottom: 72px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Rejilla de momentos
+   Dos columnas en móvil, cuatro a partir de tablet.
+   --------------------------------------------------------------------------- */
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px 20px;
+
+  @include m.up(tablet) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  @include m.up(desktop) {
+    gap: 28px;
+  }
+}
+
+/* Caja de altura fija: los iconos tienen proporciones muy distintas y así
+   los pies de texto quedan alineados entre sí. */
+.iconoCaja {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 72px;
+
+  @include m.up(desktop) {
+    height: 92px;
+  }
+}
+
+/* `contain` respeta la proporción de cada icono dentro de la caja, sin
+   deformar los apaisados ni empequeñecer los verticales. */
+.icono {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.pie {
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  @include m.p3(color, v.$color-orange, v.$color-orange-p3);
+  @include m.fluid(font-size, v.$fs-caption-min, v.$fs-caption-max);
+}

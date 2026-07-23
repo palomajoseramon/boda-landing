@@ -1,0 +1,358 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+.seccion {
+  @include m.p3(background-color, v.$color-blue, v.$color-blue-p3);
+  @include m.p3(color, v.$color-cream, v.$color-cream-p3);
+
+  // Sin padding inferior: la sección de contacto continúa sobre el mismo
+  // fondo azul y aporta su propia separación.
+  padding-block: 64px 0;
+
+  @include m.up(desktop) {
+    padding-block: 104px 0;
+  }
+}
+
+.inner {
+  @include m.container;
+
+  @include m.up(desktop) {
+    max-width: v.$container-max;
+    padding-inline: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Encabezado
+   --------------------------------------------------------------------------- */
+.encabezado {
+  margin-bottom: 32px;
+
+  @include m.up(desktop) {
+    margin-bottom: 44px;
+  }
+}
+
+.title {
+  font-family: v.$font-serif;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 0 4px;
+
+  @include m.fluid(font-size, v.$fs-h2-min, v.$fs-h2-max);
+
+  // En móvil el titular se reparte en dos líneas, como en el diseño
+  @include m.down(desktop) {
+    max-width: 11ch;
+    line-height: 1.05;
+  }
+}
+
+.fecha {
+  font-weight: 300; // Poppins Light
+  letter-spacing: 0.06em;
+  margin: 0;
+
+  @include m.fluid(font-size, 16px, 21px);
+}
+
+/* ---------------------------------------------------------------------------
+   Marco del formulario
+   --------------------------------------------------------------------------- */
+.marco {
+  border: 1px solid rgba(v.$color-cream, 0.85);
+  padding: 28px 22px;
+
+  @include m.up(tablet) {
+    padding: 44px 40px;
+  }
+
+  @include m.up(desktop) {
+    padding: 52px 56px;
+  }
+}
+
+.columnas {
+  display: grid;
+  gap: 36px;
+
+  @include m.up(desktop) {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+}
+
+.colIzquierda {
+  min-width: 0;
+}
+
+/* Columna en flujo vertical para poder empujar el botón al pie */
+.colDerecha {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------------------------------------------------------------------------
+   Campos de texto
+   El diseño usa el placeholder como etiqueta; la etiqueta real se mantiene
+   oculta para lectores de pantalla.
+   --------------------------------------------------------------------------- */
+.campo {
+  margin-bottom: 22px;
+}
+
+.label {
+  @include m.visually-hidden;
+}
+
+.input {
+  width: 100%;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(v.$color-cream, 0.75);
+  border-radius: 0;
+  padding: 8px 2px;
+  color: v.$color-cream;
+  font-weight: 400; // Poppins Regular
+  // 16px como mínimo: por debajo, iOS hace zoom automático al enfocar.
+  @include m.fluid(font-size, 16px, 18px);
+
+  transition: border-color v.$dur-fast v.$ease-out-soft;
+
+  &::placeholder {
+    color: rgba(v.$color-cream, 0.72);
+    font-weight: 400; // Poppins Regular
+  }
+
+  &:hover {
+    border-bottom-color: v.$color-cream;
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom-color: v.$color-cream;
+    border-bottom-width: 2px;
+    padding-bottom: 7px; // compensa el grosor extra
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(v.$color-cream, 0.9);
+    outline-offset: 4px;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 62px;
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------------------
+   Radios y checkbox
+   Se oculta el control nativo y se dibuja uno propio, conservando el foco
+   por teclado y el área táctil mínima.
+   --------------------------------------------------------------------------- */
+.check,
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px; // objetivo táctil cómodo
+  cursor: pointer;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  @include m.fluid(font-size, 15px, 17px);
+
+  input {
+    @include m.visually-hidden;
+  }
+}
+
+.marca {
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid v.$color-cream;
+  border-radius: 50%;
+  transition: background-color v.$dur-fast v.$ease-out-soft;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background-color: v.$color-cream;
+    opacity: 0;
+    transform: scale(0.5);
+    transition:
+      opacity v.$dur-fast v.$ease-out-soft,
+      transform v.$dur-fast v.$ease-out-soft;
+  }
+}
+
+/* El checkbox se distingue del radio por la forma */
+.check .marca {
+  border-radius: 3px;
+
+  &::after {
+    border-radius: 1px;
+  }
+}
+
+input:checked + .marca::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+input:focus-visible + .marca {
+  outline: 2px solid v.$color-cream;
+  outline-offset: 3px;
+}
+
+.checkTexto,
+.radioTexto {
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------------------
+   Grupos de preguntas
+   --------------------------------------------------------------------------- */
+.grupo {
+  border: 0;
+  margin: 0 0 26px;
+  padding: 0;
+  transition: opacity v.$dur-base v.$ease-out-soft;
+
+  // El bloque de vuelta permanece atenuado hasta elegir autobús
+  &:disabled {
+    opacity: 0.45;
+  }
+}
+
+.pregunta {
+  font-weight: 500; // Poppins Medium
+  line-height: 1.35;
+  padding: 0;
+  margin-bottom: 6px;
+
+  @include m.fluid(font-size, 16px, 19px);
+}
+
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+
+.nota {
+  line-height: 1.45;
+  margin: 0 0 24px;
+
+  @include m.fluid(font-size, 14px, 16px);
+}
+
+/* ---------------------------------------------------------------------------
+   Botón
+   --------------------------------------------------------------------------- */
+/* El botón se ancla al pie de la columna derecha, alineado con la esquina
+   inferior del marco. */
+.accion {
+  display: flex;
+  justify-content: flex-end;
+
+  @include m.up(desktop) {
+    margin-top: auto;
+  }
+}
+
+.boton {
+  @include m.button-reset;
+  @include m.p3(background-color, v.$color-orange, v.$color-orange-p3);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: v.$color-cream;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 15px 34px;
+  min-height: 48px;
+  transition:
+    filter v.$dur-fast v.$ease-out-soft,
+    opacity v.$dur-base v.$ease-out-soft,
+    transform v.$dur-fast v.$ease-out-soft;
+
+  @include m.fluid(font-size, 16px, 19px);
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid v.$color-cream;
+    outline-offset: 3px;
+  }
+
+  // Inactivo mientras faltan respuestas obligatorias
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+/* Indicador de envío */
+.loader {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(v.$color-cream, 0.35);
+  border-top-color: v.$color-cream;
+  border-radius: 50%;
+  animation: girar 720ms linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Avisos y plazo cerrado
+   --------------------------------------------------------------------------- */
+.aviso {
+  margin: 24px 0 0;
+  padding: 14px 18px;
+  line-height: 1.45;
+
+  @include m.fluid(font-size, 15px, 17px);
+}
+
+.avisoOk {
+  background-color: rgba(v.$color-cream, 0.16);
+}
+
+.avisoError {
+  background-color: rgba(#000, 0.22);
+}
+
+.cerrado {
+  border: 1px solid rgba(v.$color-cream, 0.85);
+  padding: 32px 28px;
+  line-height: 1.5;
+
+  @include m.fluid(font-size, 16px, 19px);
+
+  p {
+    margin: 0;
+    max-width: 52ch;
+  }
+}
