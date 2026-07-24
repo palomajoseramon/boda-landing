@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRevelar } from "./useRevelar";
 import styles from "./CuentaAtras.module.scss";
 
 /** 23 de enero de 2027, 12:00 (hora peninsular, UTC+1 en enero). */
@@ -51,8 +52,14 @@ export default function CuentaAtras() {
     { valor: restante?.segundos, etiqueta: "Segundos", digitos: 2 },
   ];
 
+  const { ref, visible } = useRevelar<HTMLElement>();
+
   return (
-    <section className={styles.seccion} aria-labelledby="cuenta-title">
+    <section
+      ref={ref}
+      className={`${styles.seccion} ${visible ? styles.visible : ""}`}
+      aria-labelledby="cuenta-title"
+    >
       <div className={styles.inner}>
         <h2 id="cuenta-title" className={styles.title}>
           Cuenta atrás
@@ -84,14 +91,16 @@ export default function CuentaAtras() {
           ))}
         </div>
 
-        <Image
-          src="/assets/svg/perro-de-pie.svg"
-          alt=""
-          aria-hidden="true"
-          width={253}
-          height={359}
-          className={styles.perro}
-        />
+        <div className={styles.perro}>
+          <Image
+            src="/assets/svg/perro-de-pie.svg"
+            alt=""
+            aria-hidden="true"
+            width={253}
+            height={359}
+            className={styles.perroImg}
+          />
+        </div>
       </div>
     </section>
   );

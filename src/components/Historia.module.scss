@@ -1,11 +1,17 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .historia {
   @include m.p3(background-color, v.$color-orange, v.$color-orange-p3);
   @include m.p3(color, v.$color-cream, v.$color-cream-p3);
 
-  overflow: hidden;
+  // Sin `overflow: hidden`: cualquier valor distinto de `visible` en un
+  // ancestro desactiva el `position: sticky` de la foto. Se recorta solo en
+  // móvil, donde no hay desplazamiento que preservar.
+  @include m.down(desktop) {
+    overflow: hidden;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -22,19 +28,22 @@
 
   @include m.up(desktop) {
     container-type: inline-size;
-    // Más alto que el bloque de contenido: la holgura sobrante es el aire
-    // inferior de la sección.
-    aspect-ratio: 1146 / 900;
     max-width: v.$container-max;
     padding-inline: 0;
+    // Dos columnas: el texto marca la altura y la foto se desplaza dentro
+    // de la suya. `start` evita que la columna de la foto se estire y anule
+    // el efecto sticky.
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    padding-bottom: 6cqw;
   }
 }
 
-/* Elementos posicionables — solo en desktop */
+/* Solo el perro y el titular se posicionan libremente. El texto pasa a
+   ocupar espacio real: es su altura la que da recorrido a la foto. */
 .perro,
-.title,
-.texto,
-.marco {
+.title {
   @include m.up(desktop) {
     position: absolute;
   }
@@ -55,6 +64,15 @@
     width: 13cqw;
     margin: 0;
   }
+}
+
+/* La imagen interior respira, independiente del revelado de entrada que
+   actúa sobre el wrapper (así no compiten por la propiedad transform). */
+.perroImg {
+  width: 100%;
+  height: 100%;
+
+  @include mo.respira(11s, 0s);
 }
 
 /* ---------------------------------------------------------------------------
@@ -94,9 +112,9 @@
   @include m.fluid(font-size, v.$fs-body-min, v.$fs-body-max);
 
   @include m.up(desktop) {
-    top: 43%;
-    left: 0;
+    // En flujo, con el hueco superior reservado para perro y titular
     width: 49cqw;
+    padding-top: 43cqw;
   }
 
   p {
@@ -122,10 +140,12 @@
   margin-top: 32px;
 
   @include m.up(desktop) {
-    top: 8%;
-    right: 0;
+    // `sticky`: la foto acompaña el scroll dentro de su columna y se detiene
+    // al llegar al pie del texto, en lugar de quedarse arriba dejando hueco.
+    position: sticky;
+    top: 12vh;
     width: 35cqw;
-    margin: 0;
+    margin: 8cqw 0 0;
   }
 }
 
@@ -142,3 +162,24 @@
     padding-block: 48px 64px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   El perro abre, el titular sigue y el texto cierra; la foto entra a la vez
+   que el titular para que la composición no se sienta secuencial de más.
+   --------------------------------------------------------------------------- */
+/* Cada bloque lleva su propio observador y se revela al entrar realmente en
+   pantalla. El texto queda fuera: sus palabras se revelan una a una desde
+   TextoEscrito, y un fundido del contenedor taparía esa cascada. */
+.perro,
+.title,
+.marco {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+
+  &.visible {
+    @include mo.revelado;
+  }
+}
+
+.title { @include mo.escalon(1); }

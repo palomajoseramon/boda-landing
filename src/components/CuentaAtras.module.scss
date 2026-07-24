@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .seccion {
   @include m.p3(background-color, v.$color-orange, v.$color-orange-p3);
@@ -86,13 +87,45 @@
    Perro
    --------------------------------------------------------------------------- */
 .perro {
-  width: auto;
-  height: auto;
+  display: flex;
+  justify-content: center;
   margin-top: 48px;
 
   @include m.fluid(max-height, 140px, 220px);
 
   @include m.up(desktop) {
     margin-top: 72px;
+  }
+}
+
+/* Ritmo algo distinto al del perro de "Nuestra historia" para que las dos
+   ilustraciones no se muevan al unísono. */
+.perroImg {
+  width: auto;
+  height: 100%;
+  max-height: inherit;
+
+  @include mo.respira(13s, 1.8s);
+}
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   --------------------------------------------------------------------------- */
+.title,
+.marcador,
+.perro {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+}
+
+.title    { @include mo.escalon(0); }
+.marcador { @include mo.escalon(1); }
+.perro    { @include mo.escalon(2); }
+
+.visible {
+  .title,
+  .marcador,
+  .perro {
+    @include mo.revelado;
   }
 }

@@ -1,0 +1,86 @@
+// ---------------------------------------------------------------------------
+// Gramática de movimiento
+//
+// Un único vocabulario para toda la web: mismo desplazamiento, misma curva,
+// misma duración. La coherencia es lo que separa una web cuidada de una con
+// animaciones sueltas.
+//
+// La curva (0.16, 1, 0.3, 1) arranca rápido y decelera durante casi todo el
+// recorrido: el elemento parece tener masa y detenerse por sí solo, en lugar
+// de frenar de golpe.
+// ---------------------------------------------------------------------------
+
+$mo-dur:    1700ms;                          // duración base
+$mo-ease:   cubic-bezier(0.16, 1, 0.3, 1);   // salida tendida
+$mo-shift:  16px;                            // desplazamiento vertical
+$mo-step:   170ms;                           // retardo entre hermanos
+
+/// Estado inicial de un elemento por revelar.
+/// El contenedor debe llevar la clase de visibilidad para dispararlo.
+@mixin oculto($shift: $mo-shift) {
+  opacity: 0;
+  transform: translate3d(0, $shift, 0);
+  transition:
+    opacity $mo-dur $mo-ease,
+    transform $mo-dur $mo-ease;
+}
+
+/// Estado final.
+@mixin revelado {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/// Retardo escalonado según la posición del elemento en la secuencia.
+@mixin escalon($indice, $paso: $mo-step) {
+  transition-delay: $indice * $paso;
+}
+
+/// Anula todo el movimiento cuando el usuario lo ha pedido.
+/// Se aplica dentro del bloque del elemento animado.
+@mixin sin-movimiento {
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Vida en las ilustraciones
+//
+// Un balanceo mínimo y lento que da la impresión de que el dibujo respira,
+// sin llegar a leerse como una animación. Amplitudes por debajo de 1º y
+// ciclos largos: si se nota, es demasiado.
+// ---------------------------------------------------------------------------
+
+// Los keyframes se declaran con :global para que CSS Modules no renombre
+// su identificador; de lo contrario el `animation` apuntaría a un nombre
+// que no existe en el módulo importador. El mixin arrastra su propia
+// definición, así basta con incluirlo.
+
+/// Balanceo suave. El pivote se coloca en la base para que el giro parezca
+/// natural (el peso abajo). Cada uso puede variar duración y retardo para
+/// romper la sincronía entre ilustraciones vecinas.
+@mixin respira($dur: 6s, $delay: 0s, $origin: bottom center) {
+  transform-origin: $origin;
+  animation: mo-respirar $dur ease-in-out $delay infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/// Flotación vertical pura, sin rotación. Para elementos "arquitectónicos"
+/// (la ermita) donde un balanceo se leería como raro.
+@mixin flota($dur: 7s, $delay: 0s) {
+  animation: mo-flotar $dur ease-in-out $delay infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+// Los keyframes mo-respirar y mo-flotar se declaran una sola vez, de forma
+// global, en styles/globals.scss (que no pasa por CSS Modules).

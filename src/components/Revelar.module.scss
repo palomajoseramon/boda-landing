@@ -1,0 +1,33 @@
+@use '@/styles/abstracts/variables' as v;
+
+/* ---------------------------------------------------------------------------
+   Revelado al entrar en pantalla
+
+   El desplazamiento es corto (14px) y la duración larga (1100ms) con una
+   curva de salida muy tendida: el elemento decelera durante casi todo el
+   recorrido, que es lo que da sensación de peso en lugar de "efecto web".
+   --------------------------------------------------------------------------- */
+.revelar {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* Evita que el navegador reserve capas de más una vez terminado */
+  will-change: opacity, transform;
+}
+
+.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* Quien haya pedido movimiento reducido ve el contenido ya colocado */
+@media (prefers-reduced-motion: reduce) {
+  .revelar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

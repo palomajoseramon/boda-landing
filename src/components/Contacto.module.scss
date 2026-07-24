@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .seccion {
   @include m.p3(background-color, v.$color-blue, v.$color-blue-p3);
@@ -96,7 +97,7 @@
   transition: opacity v.$dur-fast v.$ease-out-soft;
 
   @include m.p3(color, v.$color-blue, v.$color-blue-p3);
-  @include m.fluid(font-size, 16px, 21px);
+  @include m.fluid(font-size, 15px, 21px);
 
   &:hover {
     opacity: 0.7;
@@ -122,14 +123,13 @@
   @include m.p3(color, v.$color-orange, v.$color-orange-p3);
   @include m.fluid(font-size, 11px, 13px);
 
-  // En pantallas estrechas no hay hueco junto al IBAN: se centra encima
-  // con un fondo que garantiza la legibilidad.
+  // En pantallas estrechas no hay hueco junto al IBAN: el aviso baja por
+  // debajo del panel para no taparlo.
   @include m.down(tablet) {
+    top: 100%;
     right: auto;
     left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 3px 10px;
-    background-color: v.$color-cream;
+    transform: translate(-50%, 4px);
   }
 }
 
@@ -170,7 +170,7 @@
   text-transform: uppercase;
   transition: opacity v.$dur-fast v.$ease-out-soft;
 
-  @include m.fluid(font-size, 16px, 22px);
+  @include m.fluid(font-size, 14px, 19px);
 
   &:hover {
     opacity: 0.72;
@@ -190,4 +190,26 @@
   font-weight: 400;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   --------------------------------------------------------------------------- */
+.cuenta,
+.title,
+.lista {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+}
+
+.cuenta { @include mo.escalon(0); }
+.title  { @include mo.escalon(1); }
+.lista  { @include mo.escalon(2); }
+
+.visible {
+  .cuenta,
+  .title,
+  .lista {
+    @include mo.revelado;
+  }
 }

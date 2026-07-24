@@ -1,0 +1,35 @@
+@use '@/styles/abstracts/motion' as mo;
+
+.parrafo {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* Cada palabra entra con opacidad y un desplazamiento mínimo. El
+   `inline-block` es necesario para que acepte transform, pero rompería el
+   salto de línea natural: por eso el espacio va dentro del propio span. */
+.palabra {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 6px, 0);
+  transition:
+    opacity 900ms mo.$mo-ease,
+    transform 900ms mo.$mo-ease;
+  white-space: pre-wrap;
+}
+
+/* La sección marca data-revelado cuando entra en pantalla; el atributo es
+   global y atraviesa el ámbito de CSS Modules. */
+:global([data-revelado='true']) .palabra {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palabra {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms !important;
+  }
+}

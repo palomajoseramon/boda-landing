@@ -92,3 +92,28 @@ body[data-locked='true'] {
 .visually-hidden {
   @include m.visually-hidden;
 }
+
+/* ---------------------------------------------------------------------------
+   Keyframes de movimiento
+   Declarados aquí (fuera de CSS Modules) para que su identificador sea
+   global y las animaciones de los .module.scss puedan referenciarlo.
+   --------------------------------------------------------------------------- */
+@keyframes mo-respirar {
+  0%,
+  100% {
+    transform: rotate(-0.6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(0.6deg) translateY(-1.5px);
+  }
+}
+
+@keyframes mo-flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}

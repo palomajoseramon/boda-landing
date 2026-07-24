@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRevelar } from "./useRevelar";
 import styles from "./Contacto.module.scss";
 
 const IBAN = "ES43 1583 0001 1791 8543 8311";
@@ -31,8 +32,14 @@ export default function Contacto() {
     }
   }
 
+  const { ref, visible } = useRevelar<HTMLElement>();
+
   return (
-    <section className={styles.seccion} aria-labelledby="contacto-title">
+    <section
+      ref={ref}
+      className={`${styles.seccion} ${visible ? styles.visible : ""}`}
+      aria-labelledby="contacto-title"
+    >
       <div className={styles.inner}>
         {/* ---------------- Número de cuenta ---------------- */}
         <div className={styles.cuenta}>

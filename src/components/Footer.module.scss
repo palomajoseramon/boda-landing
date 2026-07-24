@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .footer {
   @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
@@ -60,6 +61,15 @@
   width: auto;
 
   @include m.fluid(height, 86px, 118px);
+
+  // Cada cara con un ritmo propio para que no cabeceen a la vez
+  &:first-child {
+    @include mo.respira(12s, 0s, center bottom);
+  }
+
+  &:last-child {
+    @include mo.respira(14.5s, 1.5s, center bottom);
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -139,4 +149,34 @@
   // El corazón no lleva tracking: se compensa el sangrado heredado
   text-indent: 0;
   font-weight: 400;
+}
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   Cierre pausado: el escalón es algo mayor que en el resto de secciones
+   para que el final de la página no se sienta apresurado.
+   --------------------------------------------------------------------------- */
+.claim,
+.perros,
+.logoCaja,
+.frase,
+.cierre {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+}
+
+.claim    { @include mo.escalon(0, 150ms); }
+.perros   { @include mo.escalon(1, 150ms); }
+.logoCaja { @include mo.escalon(2, 150ms); }
+.frase    { @include mo.escalon(3, 150ms); }
+.cierre   { @include mo.escalon(4, 150ms); }
+
+.visible {
+  .claim,
+  .perros,
+  .logoCaja,
+  .frase,
+  .cierre {
+    @include mo.revelado;
+  }
 }

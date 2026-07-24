@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .seccion {
   @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
@@ -104,4 +105,29 @@
 
   @include m.p3(color, v.$color-orange, v.$color-orange-p3);
   @include m.fluid(font-size, v.$fs-caption-min, v.$fs-caption-max);
+}
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   Los cuatro momentos entran en cascada, en el mismo orden en que ocurren
+   durante el día.
+   --------------------------------------------------------------------------- */
+.title,
+.item {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+}
+
+.title.visible {
+  @include mo.revelado;
+}
+
+/* La rejilla revela sus cuatro momentos en cascada al entrar en pantalla */
+.item:nth-child(1) { @include mo.escalon(0); }
+.item:nth-child(2) { @include mo.escalon(1); }
+.item:nth-child(3) { @include mo.escalon(2); }
+.item:nth-child(4) { @include mo.escalon(3); }
+
+.lista.visible .item {
+  @include mo.revelado;
 }

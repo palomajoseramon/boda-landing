@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .seccion {
   @include m.p3(background-color, v.$color-blue, v.$color-blue-p3);
@@ -219,17 +220,54 @@ input:focus-visible + .marca {
 }
 
 /* ---------------------------------------------------------------------------
+   Bloque por persona
+   Cuando hay acompañante aparecen dos bloques; una línea sutil los separa.
+   --------------------------------------------------------------------------- */
+.persona + .persona {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(v.$color-cream, 0.35);
+}
+
+.personaTitulo {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  opacity: 0.85;
+
+  @include m.fluid(font-size, 13px, 15px);
+}
+
+/* ---------------------------------------------------------------------------
    Grupos de preguntas
    --------------------------------------------------------------------------- */
 .grupo {
   border: 0;
   margin: 0 0 26px;
   padding: 0;
-  transition: opacity v.$dur-base v.$ease-out-soft;
+}
 
-  // El bloque de vuelta permanece atenuado hasta elegir autobús
-  &:disabled {
-    opacity: 0.45;
+/* La pregunta de la vuelta se monta al elegir autobús: entra con un
+   desplegado breve para que no aparezca de golpe. */
+.grupoDesplegado {
+  animation: desplegar 420ms v.$ease-out-soft both;
+}
+
+@keyframes desplegar {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grupoDesplegado {
+    animation: none;
   }
 }
 
@@ -354,5 +392,21 @@ input:focus-visible + .marca {
   p {
     margin: 0;
     max-width: 52ch;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   El marco entra tras el encabezado; los campos no se animan por separado
+   para no entorpecer a quien va directo a rellenarlo.
+   --------------------------------------------------------------------------- */
+.encabezado,
+.marco,
+.cerrado {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+
+  &.visible {
+    @include mo.revelado;
   }
 }

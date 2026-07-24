@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useRevelar } from "./useRevelar";
 import styles from "./Detalles.module.scss";
 
 type Momento = {
@@ -46,14 +49,24 @@ const MOMENTOS: Momento[] = [
 ];
 
 export default function Detalles() {
+  const titular = useRevelar<HTMLHeadingElement>();
+  const rejilla = useRevelar<HTMLUListElement>();
+
   return (
     <section className={styles.seccion} aria-labelledby="detalles-title">
       <div className={styles.inner}>
-        <h2 id="detalles-title" className={styles.title}>
+        <h2
+          ref={titular.ref}
+          id="detalles-title"
+          className={`${styles.title} ${titular.visible ? styles.visible : ""}`}
+        >
           Detalles de la celebración
         </h2>
 
-        <ul className={styles.lista}>
+        <ul
+          ref={rejilla.ref}
+          className={`${styles.lista} ${rejilla.visible ? styles.visible : ""}`}
+        >
           {MOMENTOS.map(({ hora, nombre, icono, width, height, escala }) => (
             <li key={nombre} className={styles.item}>
               <div className={styles.iconoCaja}>

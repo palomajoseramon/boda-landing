@@ -1,9 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { useRevelar } from "./useRevelar";
 import styles from "./Footer.module.scss";
 
 export default function Footer() {
+  const { ref, visible } = useRevelar<HTMLElement>();
+
   return (
-    <footer className={styles.footer}>
+    <footer
+      ref={ref}
+      className={`${styles.footer} ${visible ? styles.visible : ""}`}
+    >
       <div className={styles.inner}>
         <p className={styles.claim}>¡Te esperamos!</p>
 

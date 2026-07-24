@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .hero {
   position: relative;
@@ -148,5 +149,50 @@
 
   .date {
     font-size: max(2.9cqw, 12px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Entrada
+   El hero se revela al cargar, sin esperar al scroll. Los adornos abren muy
+   despacio y el logotipo entra después, para que la primera impresión sea
+   de algo que se asienta y no de una pantalla que aparece de golpe.
+   --------------------------------------------------------------------------- */
+.adorno {
+  animation: aparecerAdorno 2200ms mo.$mo-ease both;
+}
+
+.adornoRight {
+  animation-delay: 260ms;
+}
+
+.stage {
+  animation: aparecerLogo 1400ms mo.$mo-ease 220ms both;
+}
+
+@keyframes aparecerAdorno {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+
+@keyframes aparecerLogo {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adorno,
+  .stage {
+    animation: none;
   }
 }

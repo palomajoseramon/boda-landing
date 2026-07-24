@@ -1,5 +1,6 @@
 @use '@/styles/abstracts/variables' as v;
 @use '@/styles/abstracts/mixins' as m;
+@use '@/styles/abstracts/motion' as mo;
 
 .seccion {
   @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
@@ -78,7 +79,6 @@
    --------------------------------------------------------------------------- */
 .ermita {
   width: 100%;
-  height: auto;
   margin-bottom: 32px;
 
   @include m.up(desktop) {
@@ -87,6 +87,15 @@
     width: 58cqw;
     margin: 0;
   }
+}
+
+/* Flotación mínima: la ermita se eleva apenas unos píxeles, sin balanceo,
+   que en un edificio se leería como raro. */
+.ermitaImg {
+  width: 100%;
+  height: auto;
+
+  @include mo.flota(14s, 0.8s);
 }
 
 /* ---------------------------------------------------------------------------
@@ -184,4 +193,42 @@
 
 .busesDestacado {
   font-weight: 700;
+}
+
+/* ---------------------------------------------------------------------------
+   Movimiento
+   --------------------------------------------------------------------------- */
+.ermita {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+
+  &.visible {
+    @include mo.revelado;
+  }
+}
+
+/* El titular abre y la fecha lo sigue medio compás después */
+.title,
+.fecha {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+}
+
+.encabezado.visible {
+  .title { @include mo.revelado; }
+  .fecha { @include mo.revelado; @include mo.escalon(1); }
+}
+
+/* Dentro de la columna de horarios cada bloque entra por separado, de arriba
+   abajo: ceremonia, banquete y por último la nota de los buses. */
+.bloque,
+.buses {
+  @include mo.oculto;
+  @include mo.sin-movimiento;
+}
+
+.info.visible {
+  .bloque:nth-of-type(1) { @include mo.revelado; @include mo.escalon(0); }
+  .bloque:nth-of-type(2) { @include mo.revelado; @include mo.escalon(1); }
+  .buses                 { @include mo.revelado; @include mo.escalon(2); }
 }
