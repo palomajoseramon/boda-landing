@@ -1,3 +1,4 @@
+import Sobre from "@/components/Sobre";
 import Hero from "@/components/Hero";
 import Historia from "@/components/Historia";
 import DondeCuando from "@/components/DondeCuando";
@@ -10,6 +11,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
+      <Sobre />
       <main>
         <Hero />
         <Historia />

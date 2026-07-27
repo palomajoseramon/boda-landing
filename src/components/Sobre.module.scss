@@ -1,0 +1,199 @@
+@use '@/styles/abstracts/variables' as v;
+@use '@/styles/abstracts/mixins' as m;
+
+// Debe coincidir con FUSION_MS de Sobre.tsx
+$fusion-ms: 1700ms;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  @include m.p3(background-color, v.$color-cream, v.$color-cream-p3);
+}
+
+/* ---------------------------------------------------------------------------
+   Fusión
+   Un solo gesto continuo: la tarjeta se acerca (zoom) MIENTRAS se desvanece,
+   con la misma duración y curva. El fondo crema del overlay se va con ella,
+   dejando ver el hero que emerge por debajo. Nada frena en seco.
+   --------------------------------------------------------------------------- */
+.fundiendo {
+  // El fondo se desvanece progresivamente durante toda la fusión
+  animation: disolverFondo #{$fusion-ms} v.$ease-out-soft forwards;
+
+  .escena {
+    // Zoom continuo: arranca rápido y sigue creciendo hasta el final, sin
+    // detenerse antes de desaparecer.
+    animation: acercarTarjeta #{$fusion-ms} cubic-bezier(0.33, 0, 0.3, 1)
+      forwards;
+  }
+
+  .pista {
+    opacity: 0;
+    transition: opacity 300ms v.$ease-out-soft;
+  }
+}
+
+@keyframes acercarTarjeta {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  // La subida ocurre mientras la tarjeta aún es visible: al 60% ya está
+  // desplazada y ampliada, y solo entonces se desvanece. Si se dejara para
+  // el final, el movimiento pasaría desapercibido bajo la opacidad casi nula.
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.35) translateY(-2%);
+    opacity: 0;
+  }
+}
+
+@keyframes disolverFondo {
+  // El fondo crema se sostiene al principio y luego cede despacio, para que
+  // el hero no aparezca de golpe sino que se revele bajo la tarjeta.
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Escena del sobre
+   --------------------------------------------------------------------------- */
+.escena {
+  @include m.button-reset;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  max-width: 100%;
+  // El zoom parte del centro del sobre
+  transform-origin: center 42%;
+  will-change: transform;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+/* El frame se muestra entero, sin recortes. El translateY (desde JS) sube y
+   baja todo el frame para el vaivén, sin ocultar nada. */
+.marco {
+  display: flex;
+  justify-content: center;
+  // Referencia de ancho para el max-width en % del frame, y tope propio para
+  // que el zoom de reposo no empuje nada fuera del viewport.
+  max-width: 100%;
+}
+
+.frame {
+  width: auto;
+  height: auto;
+  // `dvw` (o vw) mide el viewport, no el padre flex colapsado. Se deja margen
+  // suficiente para que el zoom de reposo no rebase el ancho de pantalla.
+  max-width: min(82vw, 520px);
+  max-height: 86dvh;
+
+  @include m.up(desktop) {
+    max-width: min(46vw, 620px);
+  }
+}
+
+/* En reposo, el sobre "respira" un punto más grande y, al hacer click,
+   encoge suavemente hasta su tamaño de animación. */
+.reposo .marco {
+  transform: scale(1.06);
+  transition: transform 900ms v.$ease-out-soft;
+}
+
+.escena:not(.reposo) .marco {
+  transition: transform 900ms v.$ease-out-soft;
+}
+
+/* ---------------------------------------------------------------------------
+   Pista "Haz click para empezar"
+   Sobria: icono de click minimalista + texto en mayúsculas con tracking.
+   --------------------------------------------------------------------------- */
+.pista {
+  // Fijada respecto a la pantalla, no al sobre (que está desplazado): así
+  // queda siempre visible en la zona baja-central del viewport.
+  position: fixed;
+  left: 50%;
+  bottom: 12dvh;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  // Nunca más ancha que la pantalla: un `fixed` ignora el overflow del html,
+  // así que el tope va aquí. El tracking se recorta antes que desbordar.
+  max-width: 92vw;
+  text-align: center;
+  z-index: 2;
+
+  font-weight: 300; // Poppins Light
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+
+  @include m.p3(color, v.$color-blue, v.$color-blue-p3);
+  @include m.fluid(font-size, 10px, 12px);
+
+  // Latido muy lento que invita sin distraer
+  animation: latir 2600ms ease-in-out infinite;
+
+  // El icono de click, dibujado en el ::before
+  &::before {
+    content: '';
+    width: 26px;
+    height: 38px;
+    border: 1.5px solid currentColor;
+    border-radius: 13px;
+    // El "pulsador" interior
+    background:
+      radial-gradient(circle at 50% 30%, currentColor 0 2.5px, transparent 2.6px);
+  }
+}
+
+@keyframes latir {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .pista {
+    transition: none;
+    animation: none;
+  }
+
+  // Sin movimiento, no hay zoom: el overlay simplemente se funde
+  .acercando .escena {
+    transform: none;
+    transition: none;
+  }
+}

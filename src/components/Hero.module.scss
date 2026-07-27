@@ -46,26 +46,28 @@
 }
 
 .adornoLeft {
-  // Móvil: entra por la esquina superior derecha
+  // Móvil: asoma por la esquina superior derecha, anclado DENTRO del borde
+  // (right positivo lo mete hacia adentro) para no generar scroll lateral.
   top: 0;
-  right: 0;
+  right: 4%;
   height: 34%;
-  transform: translate(30%, -46%);
+  transform: translateY(-40%);
 
   @include m.up(desktop) {
-    left: 0;
+    top: 50%;
     right: auto;
+    left: 0;
     height: 88%;
     transform: translate(-58%, -50%);
   }
 }
 
 .adornoRight {
-  // Móvil: asoma por la esquina inferior izquierda
+  // Móvil: asoma por la esquina inferior izquierda, dentro del borde
   bottom: 0;
-  left: 0;
+  left: 4%;
   height: 30%;
-  transform: translate(-38%, 42%) scaleX(-1);
+  transform: translateY(38%) scaleX(-1);
 
   @include m.up(desktop) {
     top: 50%;
@@ -153,46 +155,73 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Entrada
-   El hero se revela al cargar, sin esperar al scroll. Los adornos abren muy
-   despacio y el logotipo entra después, para que la primera impresión sea
-   de algo que se asienta y no de una pantalla que aparece de golpe.
+   Entrada sincronizada con la fusión del sobre
+   El hero permanece oculto hasta que el sobre inicia su fusión (el body
+   recibe data-entrando). Entonces el logo emerge con un zoom-in muy sutil,
+   partiendo ligeramente ampliado, para dar continuidad al zoom de la tarjeta:
+   se percibe que la tarjeta "se convierte" en el hero, no que aparece otra
+   pantalla. Los adornos abren después, ya asentado el logo.
    --------------------------------------------------------------------------- */
-.adorno {
-  animation: aparecerAdorno 2200ms mo.$mo-ease both;
-}
 
-.adornoRight {
-  animation-delay: 260ms;
-}
+// Estado inicial oculto SOLO si el sobre está presente. Sin sobre (o si su
+// JS no llega a montarse), el hero se ve con normalidad desde el principio.
+:global(body[data-sobre='activo']) {
+  .stage {
+    opacity: 0;
+    transform: scale(1.08);
+  }
 
-.stage {
-  animation: aparecerLogo 1400ms mo.$mo-ease 220ms both;
-}
-
-@keyframes aparecerAdorno {
-  from {
+  .adorno {
     opacity: 0;
   }
+}
+
+// Cuando el sobre entrega el testigo, el hero emerge. Empieza ya, mientras
+// la tarjeta todavía se ve, para que ambos convivan durante la fusión.
+:global(body[data-entrando='true']) {
+  .stage {
+    animation: emergerLogo 1900ms cubic-bezier(0.22, 1, 0.3, 1) forwards;
+  }
+
+  .adorno {
+    animation: emergerAdorno 2600ms mo.$mo-ease 700ms forwards;
+  }
+
+  .adornoRight {
+    animation-delay: 960ms;
+  }
+}
+
+@keyframes emergerLogo {
+  from {
+    opacity: 0;
+    // Zoom inicial leve, a juego con el crecimiento suave de la tarjeta
+    transform: scale(1.05);
+  }
+  40% {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes emergerAdorno {
   to {
     opacity: 0.4;
   }
 }
 
-@keyframes aparecerLogo {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .adorno,
   .stage {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .adorno {
+    opacity: 0.4;
     animation: none;
   }
 }

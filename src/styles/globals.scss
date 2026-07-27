@@ -17,6 +17,11 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  // Ningún elemento que sobresalga unos píxeles debe generar scroll lateral.
+  // `clip` corta en ambos ejes sin crear un contexto de scroll (a diferencia
+  // de `hidden`), de modo que el scroll vertical de la página no se ve
+  // afectado y `position: sticky` sigue funcionando.
+  overflow-x: clip;
 }
 
 body {
