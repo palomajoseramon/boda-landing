@@ -26,6 +26,20 @@ export const metadata: Metadata = {
   title: "Paloma & José Ramón · 23.01.2027",
   description:
     "Nos casamos el 23 de enero de 2027. Confirma tu asistencia y consulta todos los detalles de la celebración.",
+  // Al compartir el enlace (WhatsApp, redes) se muestra esta tarjeta.
+  openGraph: {
+    title: "Paloma & José Ramón · 23.01.2027",
+    description:
+      "Nos casamos el 23 de enero de 2027. Confirma tu asistencia y consulta todos los detalles.",
+    type: "website",
+    locale: "es_ES",
+  },
+  // Web privada de invitación: no interesa que la indexen los buscadores.
+  robots: { index: false, follow: false },
+};
+
+export const viewport = {
+  themeColor: "#ff7f0b",
 };
 
 export default function RootLayout({
