@@ -132,25 +132,27 @@ $fusion-ms: 1700ms;
    Sobria: icono de click minimalista + texto en mayúsculas con tracking.
    --------------------------------------------------------------------------- */
 .pista {
-  // Fijada respecto a la pantalla, no al sobre (que está desplazado): así
-  // queda siempre visible en la zona baja-central del viewport.
+  // Fijada respecto a la pantalla, centrada horizontalmente con inset+margin
+  // (no con left+translate): así la animación de latido, que también usa
+  // transform, no compite con el centrado y no se descuadra en iOS.
   position: fixed;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: 12dvh;
-  transform: translateX(-50%);
+  margin-inline: auto;
+  width: fit-content;
+  max-width: 92vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  // Nunca más ancha que la pantalla: un `fixed` ignora el overflow del html,
-  // así que el tope va aquí. El tracking se recorta antes que desbordar.
-  max-width: 92vw;
-  text-align: center;
   z-index: 2;
 
   font-weight: 300; // Poppins Light
   letter-spacing: 0.28em;
-  text-indent: 0.28em;
+  // Sin text-indent: descentraría el texto respecto al icono. El tracking
+  // sobrante del último carácter se asume, es imperceptible aquí.
+  text-align: center;
   text-transform: uppercase;
 
   @include m.p3(color, v.$color-blue, v.$color-blue-p3);
@@ -176,11 +178,11 @@ $fusion-ms: 1700ms;
   0%,
   100% {
     opacity: 0.55;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
   }
   50% {
     opacity: 1;
-    transform: translate(-50%, -4px);
+    transform: translateY(-4px);
   }
 }
 
