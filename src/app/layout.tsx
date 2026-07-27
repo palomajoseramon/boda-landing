@@ -23,14 +23,14 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Paloma & José Ramón · 23.01.2027",
+  title: "Paloma & José Ramón · ¡Nos casamos!",
   description:
-    "Nos casamos el 23 de enero de 2027. Confirma tu asistencia y consulta todos los detalles de la celebración.",
+    "Después de tantos años caminando juntos, nos casamos el 23 de enero de 2027. Nos encantaría que nos acompañes en un día tan especial.",
   // Al compartir el enlace (WhatsApp, redes) se muestra esta tarjeta.
   openGraph: {
-    title: "Paloma & José Ramón · 23.01.2027",
+    title: "Paloma & José Ramón · ¡Nos casamos!",
     description:
-      "Nos casamos el 23 de enero de 2027. Confirma tu asistencia y consulta todos los detalles.",
+      "El 23 de enero de 2027 empezamos un nuevo capítulo, y no se nos ocurre mejor manera de celebrarlo que contigo. ♡",
     type: "website",
     locale: "es_ES",
   },

@@ -5,7 +5,7 @@ import { join } from "node:path";
 // Tarjeta de vista previa al compartir el enlace (WhatsApp, redes).
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Paloma & José Ramón · 23.01.2027";
+export const alt = "Paloma & José Ramón · ¡Nos casamos! · 23 de enero de 2027";
 
 export default async function Image() {
   // El logo del hero, rasterizado, embebido como data URI.
@@ -23,7 +23,7 @@ export default async function Image() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#f9f7f4",
+          backgroundColor: "#ffffff",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}

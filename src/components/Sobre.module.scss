@@ -93,27 +93,27 @@ $fusion-ms: 1700ms;
   }
 }
 
-/* El frame se muestra entero, sin recortes. El translateY (desde JS) sube y
-   baja todo el frame para el vaivén, sin ocultar nada. */
+/* Los frames se apilan uno sobre otro; solo el activo tiene opacidad 1. El
+   translateY (desde JS) sube y baja todo el conjunto para el vaivén. El marco
+   toma el tamaño del frame (relación 900:1698) para que la pila tenga caja. */
 .marco {
-  display: flex;
-  justify-content: center;
-  // Referencia de ancho para el max-width en % del frame, y tope propio para
-  // que el zoom de reposo no empuje nada fuera del viewport.
-  max-width: 100%;
+  position: relative;
+  width: min(82vw, 520px);
+  aspect-ratio: 900 / 1698;
+
+  @include m.up(desktop) {
+    width: min(46vw, 620px);
+  }
 }
 
 .frame {
-  width: auto;
-  height: auto;
-  // `dvw` (o vw) mide el viewport, no el padre flex colapsado. Se deja margen
-  // suficiente para que el zoom de reposo no rebase el ancho de pantalla.
-  max-width: min(82vw, 520px);
-  max-height: 86dvh;
-
-  @include m.up(desktop) {
-    max-width: min(46vw, 620px);
-  }
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  // La transición de opacidad se deja instantánea: a 30fps un fundido entre
+  // frames emborronaría el movimiento. El apilado ya elimina el parpadeo.
 }
 
 /* En reposo, el sobre "respira" un punto más grande y, al hacer click,
@@ -132,27 +132,25 @@ $fusion-ms: 1700ms;
    Sobria: icono de click minimalista + texto en mayúsculas con tracking.
    --------------------------------------------------------------------------- */
 .pista {
-  // Fijada respecto a la pantalla, centrada horizontalmente con inset+margin
-  // (no con left+translate): así la animación de latido, que también usa
-  // transform, no compite con el centrado y no se descuadra en iOS.
+  // Fijada respecto a la pantalla, no al sobre (que está desplazado): así
+  // queda siempre visible en la zona baja-central del viewport.
   position: fixed;
-  left: 0;
-  right: 0;
+  left: 50%;
   bottom: 12dvh;
-  margin-inline: auto;
-  width: fit-content;
-  max-width: 92vw;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  // Nunca más ancha que la pantalla: un `fixed` ignora el overflow del html,
+  // así que el tope va aquí. El tracking se recorta antes que desbordar.
+  max-width: 92vw;
+  text-align: center;
   z-index: 2;
 
   font-weight: 300; // Poppins Light
   letter-spacing: 0.28em;
-  // Sin text-indent: descentraría el texto respecto al icono. El tracking
-  // sobrante del último carácter se asume, es imperceptible aquí.
-  text-align: center;
+  text-indent: 0.28em;
   text-transform: uppercase;
 
   @include m.p3(color, v.$color-blue, v.$color-blue-p3);
@@ -178,11 +176,11 @@ $fusion-ms: 1700ms;
   0%,
   100% {
     opacity: 0.55;
-    transform: translateY(0);
+    transform: translate(-50%, 0);
   }
   50% {
     opacity: 1;
-    transform: translateY(-4px);
+    transform: translate(-50%, -4px);
   }
 }
 

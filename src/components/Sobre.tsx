@@ -51,41 +51,6 @@ export default function Sobre() {
       : bruto ** 2.2; // vuelta: acelerada hacia el centro
   const offsetY = base + vaiven * 130;
 
-  const [listo, setListo] = useState(false);
-  const framesRef = useRef<HTMLImageElement[]>([]);
-
-  // Precarga y DECODIFICA todos los frames antes de habilitar el sobre. En
-  // iPhone, mostrar un frame sin decodificar produce un parpadeo: aquí se
-  // fuerza la decodificación con img.decode() y se guardan las imágenes para
-  // reutilizarlas, evitando redescargas al reproducir.
-  useEffect(() => {
-    let cancelado = false;
-
-    async function precargar() {
-      const imagenes = await Promise.all(
-        Array.from({ length: FRAMES }, (_, i) => {
-          const img = new window.Image();
-          img.src = frameSrc(i);
-          // decode() resuelve cuando la imagen está lista para pintarse sin
-          // trabajo adicional. Se ignora el error (algún formato/really old).
-          return img.decode().then(
-            () => img,
-            () => img,
-          );
-        }),
-      );
-      if (!cancelado) {
-        framesRef.current = imagenes;
-        setListo(true);
-      }
-    }
-
-    precargar();
-    return () => {
-      cancelado = true;
-    };
-  }, []);
-
   const arrancarMusica = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -109,7 +74,7 @@ export default function Sobre() {
   }, []);
 
   const abrir = useCallback(() => {
-    if (fase !== "cerrado" || !listo) return;
+    if (fase !== "cerrado") return;
     setFase("animando");
     arrancarMusica();
 
@@ -132,7 +97,7 @@ export default function Sobre() {
       rafRef.current = requestAnimationFrame(paso);
     };
     rafRef.current = requestAnimationFrame(paso);
-  }, [fase, listo, arrancarMusica]);
+  }, [fase, arrancarMusica]);
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
@@ -169,26 +134,33 @@ export default function Sobre() {
         type="button"
         className={`${styles.escena} ${fase === "cerrado" ? styles.reposo : ""}`}
         onClick={abrir}
-        disabled={fase !== "cerrado" || !listo}
+        disabled={fase !== "cerrado"}
         aria-label="Abrir la invitación"
       >
-        <div className={styles.marco}>
-          <Image
-            src={frameSrc(indice)}
-            alt=""
-            width={900}
-            height={1698}
-            className={styles.frame}
-            style={{ transform: `translateY(${offsetY}px)` }}
-            priority
-            unoptimized
-          />
+        <div className={styles.marco} style={{ transform: `translateY(${offsetY}px)` }}>
+          {/* Todos los frames apilados. Solo cambia la opacidad del activo,
+              nunca el `src`: así no hay ningún cambio de imagen que pueda
+              parpadear. Los frames se descargan una sola vez al montar. */}
+          {Array.from({ length: FRAMES }, (_, i) => (
+            <Image
+              key={i}
+              src={frameSrc(i)}
+              alt=""
+              width={900}
+              height={1698}
+              className={styles.frame}
+              style={{ opacity: i === indice ? 1 : 0 }}
+              priority={i === 0}
+              loading="eager"
+              unoptimized
+              aria-hidden={i !== indice}
+              draggable={false}
+            />
+          ))}
         </div>
 
         {fase === "cerrado" && (
-          <span className={styles.pista}>
-            {listo ? "Haz click para empezar" : "Cargando…"}
-          </span>
+          <span className={styles.pista}>Haz click para empezar</span>
         )}
       </button>
     </div>
