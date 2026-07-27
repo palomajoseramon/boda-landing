@@ -98,11 +98,17 @@ $fusion-ms: 1700ms;
    toma el tamaño del frame (relación 900:1698) para que la pila tenga caja. */
 .marco {
   position: relative;
-  width: min(82vw, 520px);
   aspect-ratio: 900 / 1698;
+  // Se limita por ancho Y por alto (como la versión anterior): el frame es muy
+  // alto, así que sin el tope de alto crecería fuera de la pantalla en desktop.
+  width: min(82vw, 520px);
+  max-height: 86dvh;
+  // Si el max-height recorta, el ancho se reduce con él para no deformar
+  max-width: calc(86dvh * 900 / 1698);
 
   @include m.up(desktop) {
     width: min(46vw, 620px);
+    max-width: calc(86dvh * 900 / 1698);
   }
 }
 
