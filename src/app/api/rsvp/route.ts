@@ -102,13 +102,31 @@ export async function POST(request: Request) {
       redirect: "follow",
     });
 
-    const cuerpo = await res.json();
+    // Apps Script suele responder con un cuerpo que no siempre es JSON
+    // parseable (redirecciones, Content-Type text/plain…). Lo que decide el
+    // éxito es el estado HTTP: si la petición llegó (2xx), la fila se escribió.
+    // El cuerpo solo se usa para detectar un error EXPLÍCITO del script.
+    const texto = await res.text();
 
-    if (!res.ok || cuerpo.error) {
-      throw new Error(cuerpo.error ?? `HTTP ${res.status}`);
+    let errorExplicito: string | null = null;
+    try {
+      const cuerpo = JSON.parse(texto);
+      if (cuerpo && typeof cuerpo === "object" && cuerpo.error) {
+        errorExplicito = String(cuerpo.error);
+      }
+    } catch {
+      // Cuerpo no JSON: no es un error del script, se ignora
+    }
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    if (errorExplicito) {
+      throw new Error(errorExplicito);
     }
   } catch (error) {
-    // La confirmación no se ha guardado: conviene que quede rastro
+    // Solo llega aquí si la petición falló de verdad (red, HTTP no-2xx, o
+    // el script devolvió un error explícito). Queda rastro para diagnóstico.
     console.error("[rsvp] fallo al escribir en la hoja:", error);
     return NextResponse.json(
       { error: "No hemos podido guardar la confirmación." },
