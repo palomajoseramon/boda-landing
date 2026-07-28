@@ -91,8 +91,6 @@
   justify-content: center;
   margin-top: 48px;
 
-  @include m.fluid(max-height, 140px, 220px);
-
   @include m.up(desktop) {
     margin-top: 72px;
   }
@@ -102,9 +100,9 @@
    ilustraciones no se muevan al unísono. */
 .perroImg {
   width: auto;
-  height: 100%;
-  max-height: inherit;
+  height: auto;
 
+  @include m.fluid(height, 140px, 220px);
   @include mo.respira(13s, 1.8s);
 }
 
