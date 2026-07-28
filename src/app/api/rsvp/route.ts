@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 
+// Apps Script tarda a veces 20s o más en responder. El default de Vercel son
+// 10s: sin esto, la función se cortaba antes de recibir la confirmación y el
+// usuario veía un error aunque la fila se hubiera escrito. 60s da margen de
+// sobra (máximo del plan gratuito).
+export const maxDuration = 60;
+
 /** Cierre de confirmaciones: 4 de enero de 2027, fin del día. */
 const CIERRE = new Date("2027-01-04T23:59:59+01:00").getTime();
 
@@ -93,45 +99,48 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  // Solo se confirma al usuario si el script responde un OK inequívoco
+  // ({"ok":true}). Confirmar en caso de duda sería peor que un falso error:
+  // alguien creería estar apuntado sin estarlo. Vercel corta a los 60s, así
+  // que se espera hasta 50s para dar margen a la respuesta de Google.
+  const controlador = new AbortController();
+  const timeout = setTimeout(() => controlador.abort(), 50000);
+
   try {
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...registro, token }),
-      // Apps Script responde con una redirección que hay que seguir
       redirect: "follow",
+      signal: controlador.signal,
     });
 
-    // Apps Script suele responder con un cuerpo que no siempre es JSON
-    // parseable (redirecciones, Content-Type text/plain…). Lo que decide el
-    // éxito es el estado HTTP: si la petición llegó (2xx), la fila se escribió.
-    // El cuerpo solo se usa para detectar un error EXPLÍCITO del script.
     const texto = await res.text();
-
-    let errorExplicito: string | null = null;
+    let ok = false;
     try {
       const cuerpo = JSON.parse(texto);
-      if (cuerpo && typeof cuerpo === "object" && cuerpo.error) {
-        errorExplicito = String(cuerpo.error);
-      }
+      ok = cuerpo?.ok === true;
     } catch {
-      // Cuerpo no JSON: no es un error del script, se ignora
+      // Cuerpo no parseable: no hay confirmación fiable → se trata como fallo
     }
 
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
-    if (errorExplicito) {
-      throw new Error(errorExplicito);
+    if (!res.ok || !ok) {
+      throw new Error(`respuesta inesperada del script (HTTP ${res.status})`);
     }
   } catch (error) {
-    // Solo llega aquí si la petición falló de verdad (red, HTTP no-2xx, o
-    // el script devolvió un error explícito). Queda rastro para diagnóstico.
-    console.error("[rsvp] fallo al escribir en la hoja:", error);
+    // Cualquier duda (timeout, red, respuesta no confirmada) se reporta como
+    // no guardado. Es preferible pedir que reintenten a dar por hecho algo
+    // que quizá no ocurrió.
+    console.error("[rsvp] no se pudo confirmar el guardado:", error);
     return NextResponse.json(
-      { error: "No hemos podido guardar la confirmación." },
+      {
+        error:
+          "No hemos podido confirmar tu asistencia. Vuelve a intentarlo en un momento; si sigue sin funcionar, escríbenos por WhatsApp.",
+      },
       { status: 502 },
     );
+  } finally {
+    clearTimeout(timeout);
   }
 
   return NextResponse.json({ ok: true });
