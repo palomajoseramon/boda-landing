@@ -43,10 +43,8 @@ export default function Footer() {
         </h2>
 
         <p className={styles.frase}>
-          Después de tantos años caminando juntos,
-          <br />
-          tenemos claro que el mejor destino siempre
-          <br />
+          Después de tantos años caminando juntos, <br />
+          tenemos claro que el mejor destino siempre <br />
           ha sido compartir el camino.
         </p>
 
