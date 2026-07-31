@@ -49,7 +49,7 @@ export default function DondeCuando() {
           className={`${styles.info} ${horarios.visible ? styles.visible : ""}`}
         >
           <div className={styles.bloque}>
-            <h3 className={styles.hora}>12:30h Ceremonia</h3>
+            <h3 className={styles.hora}>12:00h Ceremonia</h3>
             <p className={styles.lugar}>
               <a
                 href={MAPS.ermita}

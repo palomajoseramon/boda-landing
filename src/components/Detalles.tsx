@@ -16,7 +16,7 @@ type Momento = {
 
 const MOMENTOS: Momento[] = [
   {
-    hora: "12:30h",
+    hora: "12:00h",
     nombre: "Ceremonia",
     icono: "/assets/svg/icono-anillos.svg",
     width: 193,
